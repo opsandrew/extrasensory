@@ -41,9 +41,10 @@ if (!empty($_POST['data'])) {
             $style = 'color: #1cb220';} else {$style = 'color: red';}
 
         $answer = '<span style="'.$style.'">' . $answer_extra . '</span>';
+        $history = $extra->showAnswer_in_session($extra->name);
         $extra->saveAnswer_to_session($extra->name, $answer_extra, $user_answer);
         $extra_answer .= '<div class="row">' . '<p style="text-align: left;">Ответ экстрасенса ' . $extra->name . ' Достоверность (' . $extra->credibility_count($extra->name) . ') : ' . $answer . '</p>';
-        $extra_answer .= '<p style="text-align: left;">История: <br>' . $extra->showAnswer_in_session($extra->name) . '</p></div>';
+        $extra_answer .= '<p style="text-align: left;">История: <br>' . $history . '</p></div>';
 
     }
 
