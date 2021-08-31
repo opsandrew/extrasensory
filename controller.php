@@ -1,11 +1,12 @@
 <?php
-require_once("classes/extra.php");
 require_once("classes/session.php");
+require_once("classes/extra.php");
+require_once("classes/user.php");
 
 if (empty(session_id())) {
     session_start();
     $a = session_id();
-    $mUser = new Extra;
+    $mUser = new User;
     $mUser->name = $a;
 }
 
@@ -16,7 +17,7 @@ if (empty($_SESSION['extra_count'])) {
 
 if ($_SESSION['extra_count'] > 0) {
     $temlp = '<form method="post" id="ajax_form">
-                Введите 2-х значное число: <input type="number" name="data" required min="01" max="99"><br>
+                Введите 2-х значное число: <input type="number" name="data" required min="10" max="99"><br>
                 <input type="submit" value="Отправить">
             </form>';
 } else {
@@ -27,23 +28,23 @@ if ($_SESSION['extra_count'] > 0) {
 }
 if (!empty($_POST['data'])) {
     $user_answer = $_POST['data'];
-    $temlp2 = '<p>Число, загаданное пользователем: <span style="font-size: 24px;">'.$user_answer.'</span></p>';
-
+    $SD = new Session($mUser->name);
+    $user_answer_old = $mUser->showAnswer_in_session($mUser->name, 'user');
+    $mUser->saveUserAnswer_to_session($mUser->name, $user_answer);
+    $temlp2 = '<p>Число, загаданное пользователем: <span style="font-size: 24px;">' . $user_answer . '</span>(' . $user_answer_old . ')</p>';
+    $extra_answer = '';
     for ($i = 1; $i <= $_SESSION['extra_count']; $i++) {
         $extra = new Extra;
         $extra->name = 'extra' . $i;
-        $SS = new Session($extra->name);
         $answer_extra = $extra->showAnswer();
-        $SS->saveAnswer_to_session($answer_extra, $extra->name, $user_answer);
-
         if ($user_answer == $answer_extra) {
-            $answer = '<span style="color: #1cb220;">' . $answer_extra . '</span>';
-        } else {
-            $answer = '<span style="color: red;">' . $answer_extra . '</span>';
-        }
+            $style = 'color: #1cb220';} else {$style = 'color: red';}
+
+        $answer = '<span style="'.$style.'">' . $answer_extra . '</span>';
+        $extra->saveAnswer_to_session($extra->name, $answer_extra, $user_answer);
         $extra_answer .= '<div class="row">' . '<p style="text-align: left;">Ответ экстрасенса ' . $extra->name . ' Достоверность (' . $extra->credibility_count($extra->name) . ') : ' . $answer . '</p>';
-        $extra_answer .= '<p style="text-align: left;">История: <br>' . $SS->showAnswer_in_session($extra->name) . '</p></div>';
+        $extra_answer .= '<p style="text-align: left;">История: <br>' . $extra->showAnswer_in_session($extra->name) . '</p></div>';
+
     }
+
 }
-
-

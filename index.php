@@ -20,7 +20,7 @@ require_once("controller.php");
         <div class="col-md-3">
         </div>
         <div class="col-md-3">
-            <a href="https://github.com/opsandrew/Extra">Ссылка на репозиторий</a>
+            <a href="https://github.com/opsandrew/extrasensory">Ссылка на репозиторий</a>
         </div>
     </div>
     <div style="height: 25%;" class="row">
